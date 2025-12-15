@@ -1,0 +1,56 @@
+# ====================== Node.js 通用忽略项 ======================
+# 依赖包目录（核心，必忽略）
+node_modules/
+
+# 编译/构建产物（TS编译后的JS文件）
+dist/
+build/
+out/
+*.js.map
+*.js
+!*.config.js  # 例外：保留配置类js文件（如果有）
+
+# npm 日志
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ====================== 项目敏感/环境配置 ======================
+# 环境变量文件（存放accessToken、baseUrl等敏感信息，必忽略）
+.env
+.env.*
+!.env.example  # 例外：保留示例环境文件（方便团队参考）
+
+# 本地配置文件（比如napcat的本地配置）
+config/local.ts
+config/local.js
+
+# ====================== 编辑器/IDE 忽略项 ======================
+# VSCode
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store  # Mac系统文件
+Thumbs.db  # Windows系统文件
+
+# ====================== 机器人项目特定忽略项 ======================
+# 日志文件（机器人运行产生的日志）
+logs/
+*.log
+
+# 临时文件
+tmp/
+temp/
+
+# 截图/图片缓存（机器人发送的临时图片）
+uploads/
+images/cache/
+
+# ====================== 其他 ======================
+# 测试覆盖率报告
+coverage/
+
+# 垃圾文件
+*.tmp
+*.bak

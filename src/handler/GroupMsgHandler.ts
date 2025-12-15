@@ -1,6 +1,7 @@
 import { AllHandlers, Structs } from "node-napcat-ts";
 import { randomPickFromSpaceStr } from "../utils/StringUtils";
 import { napcat } from "../napcat/napcat";
+import { callArkChatApi } from "../utils/callOpenAI";
 type CommandHandler = (context: AllHandlers["message.group"]) => Promise<void>;
 const COMMANDS: Record<string, CommandHandler> = {
     test: testCommandHandler,
@@ -21,11 +22,36 @@ async function groupMsgHandler(context: AllHandlers["message.group"]): Promise<v
             await COMMANDS['roll'](context);
             return;
         }
+        if (isAtSelf(context)) {
+            const pureText = getPureText(context.message);
+            const AIResp = await callArkChatApi(pureText);
+            await context.quick_action([Structs.text(AIResp)]);
+            return;
+        }
     } catch (error) {
         await context.quick_action([Structs.text(`${error}`)]);
     }
 }
-
+function isAtSelf(msg: AllHandlers["message.group"]): boolean {
+    return msg.message.some((element) => {
+        return element.type === 'at' && element.data.qq === msg.self_id + '';
+    });
+}
+/**
+ * 移除消息数组中的at类型项，提取纯文本内容
+ * @param {Array} message - 原始消息数组（包含at/text/image等类型）
+ * @returns {string} 去除at后的纯文本
+ */
+function getPureText(message: AllHandlers['message.group']['message']): string {
+  // 步骤1：过滤掉所有type为at的项，只保留text类型的项
+  const textItems = message.filter(item => item.type === "text");
+  
+  // 步骤2：提取每个text项的文本内容
+  const textContents = textItems.map(item => item.data.text);
+  
+  // 步骤3：拼接所有文本（按原顺序），返回最终纯文本
+  return textContents.join("");
+}
 async function testCommandHandler(msg: AllHandlers["message.group"]) {
     await msg.quick_action([Structs.text('测试成功喵~')]);
 }

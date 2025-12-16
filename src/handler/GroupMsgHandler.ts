@@ -61,6 +61,9 @@ async function testCommandHandler(msg: AllHandlers["message.group"]) {
     await msg.quick_action([Structs.text('测试成功喵~')]);
 }
 async function rollCommandHandler(msg: AllHandlers["message.group"]) {
+    if(msg.raw_message.split(' ').length < 2) {
+        return;
+    }
     const resp = randomPickFromSpaceStr(msg.raw_message)
     await napcat.send_group_msg({
         group_id: msg.group_id,

@@ -32,7 +32,8 @@ async function groupMsgHandler(context: AllHandlers["message.group"]): Promise<v
         await context.quick_action([Structs.text(`${error}`)]);
     }
 }
-/** * 判断消息中是否包含at机器人的内容
+/** 
+ * 判断消息中是否包含at机器人的内容
  * @param {Object} msg - 消息对象，包含消息内容和发送者信息
  * @returns {boolean} 如果消息中包含at机器人则返回true，否则返回false
  */
@@ -56,17 +57,9 @@ function getPureText(message: AllHandlers['message.group']['message']): string {
     // 步骤3：拼接所有文本（按原顺序），返回最终纯文本
     return textContents.join("");
 }
-/**
- * 
- * @param msg 
- */
 async function testCommandHandler(msg: AllHandlers["message.group"]) {
     await msg.quick_action([Structs.text('测试成功喵~')]);
 }
-/**
- * 
- * @param msg 
- */
 async function rollCommandHandler(msg: AllHandlers["message.group"]) {
     const resp = randomPickFromSpaceStr(msg.raw_message)
     await napcat.send_group_msg({
